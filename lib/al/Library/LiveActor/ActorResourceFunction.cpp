@@ -7,10 +7,11 @@
 #include "Library/LiveActor/ActorInitUtil.h"
 #include "Library/LiveActor/LiveActor.h"
 #include "Library/Model/ModelKeeper.h"
+#include "Library/Resource/ActorResource.h"
 #include "Library/Resource/Resource.h"
-#include "Library/Resource/ResourceHolder.h"
+#include "Library/Resource/ResourceFunction.h"
 #include "Library/Yaml/ByamlIter.h"
-#include "Library/Yaml/ParameterObj.h"
+#include "Library/Yaml/ParameterBase.h"
 
 namespace al {
 
@@ -64,13 +65,13 @@ const u8* getModelOrAnimResourceYaml(const LiveActor* actor, const char* name, c
 }
 
 const u8* getMapPartsResourceYaml(const ActorInitInfo& initInfo, const char* name) {
-    sead::FixedSafeString<256> modelName, path;
+    StringTmp<256> modelName, path;
     makeMapPartsModelName(&modelName, &path, *initInfo.placementInfo);
     return findOrCreateResource(path, nullptr)->getByml(name);
 }
 
 const u8* tryGetMapPartsResourceYaml(const ActorInitInfo& initInfo, const char* name) {
-    sead::FixedSafeString<256> modelName, path;
+    StringTmp<256> modelName, path;
     makeMapPartsModelName(&modelName, &path, *initInfo.placementInfo);
     return findOrCreateResource(path, nullptr)->tryGetByml(name);
 }

@@ -117,7 +117,7 @@ public:
     static_assert(sizeof(OrthoProjectionParam) == 0xC);
 
     CameraPoser(const char* name);
-    virtual AreaObjDirector* getAreaObjDirector() const override;
+    AreaObjDirector* getAreaObjDirector() const override;
 
     virtual void init() {}
 
@@ -145,15 +145,15 @@ public:
 
     virtual void endSnapShotMode() {}
 
-    virtual const char* getName() const override { return mPoserName; }
+    const char* getName() const override { return mPoserName; }
 
-    virtual CollisionDirector* getCollisionDirector() const override;
+    CollisionDirector* getCollisionDirector() const override;
 
-    virtual NerveKeeper* getNerveKeeper() const override { return mNerveKeeper; }
+    NerveKeeper* getNerveKeeper() const override { return mNerveKeeper; }
 
-    virtual AudioKeeper* getAudioKeeper() const override { return mAudioKeeper; }
+    AudioKeeper* getAudioKeeper() const override { return mAudioKeeper; }
 
-    virtual RailRider* getRailRider() const override;
+    RailRider* getRailRider() const override;
 
     virtual void load(const ByamlIter& iter);
     virtual void movement();  // TODO: implementation missing
@@ -209,6 +209,8 @@ public:
 
     const sead::Matrix34f& getViewMtx() const { return mViewMtx; };
 
+    bool is_98() const { return _98; }
+
     CameraViewInfo* getViewInfo() const { return mViewInfo; }
 
     // set
@@ -229,7 +231,7 @@ protected:
     sead::Vector3f mTargetTrans = {0.0f, 0.0f, 500.0f};
     sead::Vector3f mCameraUp = sead::Vector3f::ey;
     f32 mFovyDegree = 35.0f;
-    f32 _64 = -1.0f;
+    f32 mNearClipDistance = -1.0f;
     sead::Matrix34f mViewMtx = sead::Matrix34f::ident;
     bool _98 = false;
     CameraPoserSceneInfo* mSceneInfo = nullptr;

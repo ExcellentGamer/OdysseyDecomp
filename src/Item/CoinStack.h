@@ -18,7 +18,7 @@ public:
     CoinStack(const char* name);
     virtual ~CoinStack() = default;
 
-    void init(const al::ActorInitInfo& initInfo) override;
+    void init(const al::ActorInitInfo& info) override;
     bool receiveMsg(const al::SensorMsg* message, al::HitSensor* other,
                     al::HitSensor* self) override;
 
@@ -41,6 +41,8 @@ public:
     void exeCollected();
 
     f32 getTransY() const { return mTransY; }
+
+    void setTransY(f32 transY) { mTransY = transY; }
 
 private:
     const f32* mExternalFallDistance = nullptr;

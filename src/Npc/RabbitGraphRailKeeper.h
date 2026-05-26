@@ -15,7 +15,7 @@ public:
     RabbitGraphRailKeeper(const char* name);
     RabbitGraphRailKeeper(const char* name, al::LiveActor* actor);
 
-    void init(const al::ActorInitInfo& initInfo) override;
+    void init(const al::ActorInitInfo& info) override;
     void appearBySwitch();
     void killBySwitch();
     bool isRailPointIgnore(s32 index) const;
@@ -23,7 +23,10 @@ public:
     void appear() override;
     void kill() override;
     void exeWait();
-    al::RailRider* getRailRider() const override;
+
+    al::RailRider* getRailRider() const override {
+        return mRailRider ?: al::LiveActor::getRailRider();
+    }
 
 private:
     al::Rail* mRail = nullptr;

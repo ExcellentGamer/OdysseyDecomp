@@ -4,7 +4,7 @@
 #include "Library/Yaml/ByamlIter.h"
 #include "Library/Yaml/Writer/ByamlWriter.h"
 
-PlayerHitPointData::PlayerHitPointData() {}
+PlayerHitPointData::PlayerHitPointData() = default;
 
 void PlayerHitPointData::setKidsModeFlag(bool kidsMode) {
     mIsKidsMode = kidsMode;
@@ -13,10 +13,7 @@ void PlayerHitPointData::setKidsModeFlag(bool kidsMode) {
 void PlayerHitPointData::init() {
     mIsHaveMaxUpItem = false;
     mIsForceNormalMode = false;
-    if (mIsKidsMode)
-        mCurrentHealth = 6;
-    else
-        mCurrentHealth = 3;
+    mCurrentHealth = getMaxWithoutItem();
 }
 
 void PlayerHitPointData::recoverMax() {
@@ -29,10 +26,11 @@ s32 PlayerHitPointData::PlayerHitPointData::getCurrent() const {
 
 s32 PlayerHitPointData::getMaxCurrent() const {
     if (mIsForceNormalMode)
-        return 3;
+        return getMaxWithoutItem();
 
     if (mIsHaveMaxUpItem)
         return getMaxWithItem();
+
     return getMaxWithoutItem();
 }
 
@@ -87,7 +85,7 @@ void PlayerHitPointData::kill() {
 
 void PlayerHitPointData::forceNormalMode() {
     mIsForceNormalMode = true;
-    mCurrentHealth = 3;
+    mCurrentHealth = getMaxWithoutItem();
 }
 
 void PlayerHitPointData::endForceNormalMode() {
@@ -105,11 +103,11 @@ void PlayerHitPointData::write(al::ByamlWriter* writer) {
     writer->pop();
 }
 
-void PlayerHitPointData::read(const al::ByamlIter& reader) {
+void PlayerHitPointData::read(const al::ByamlIter& save) {
     init();
 
     al::ByamlIter hitPointData{};
-    reader.tryGetIterByKey(&hitPointData, "PlayerHitPointData");
+    save.tryGetIterByKey(&hitPointData, "PlayerHitPointData");
     hitPointData.tryGetBoolByKey(&mIsHaveMaxUpItem, "IsHaveMaxUpItem");
 
     recoverMax();

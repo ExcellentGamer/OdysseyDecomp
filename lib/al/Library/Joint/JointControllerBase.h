@@ -6,6 +6,7 @@
 
 #include "Library/HostIO/HioNode.h"
 
+// BUG: outside of `al` namespace
 class IJointController {
 public:
     virtual void calcJointCallback(s32, sead::Matrix34f*) = 0;
@@ -22,8 +23,8 @@ public:
     JointControllerBase(s32);
 
     void appendJointId(s32) override;
-    virtual bool tryValidateConstraints(u32) override;
-    virtual bool tryInvalidateConstraints(u32) override;
+    bool tryValidateConstraints(u32) override;
+    bool tryInvalidateConstraints(u32) override;
 
     bool findNextId(s32*, s32) const;
     bool isExistId(s32) const;

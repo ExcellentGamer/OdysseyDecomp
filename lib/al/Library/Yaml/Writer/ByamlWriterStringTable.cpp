@@ -34,18 +34,18 @@ const char* ByamlWriterStringTable::tryAdd(const char* string) {
         if (result < 0) {
             s32 length = (s64)((strlen(string) << 32) + 0x100000000LL) >> 32;
             char* array = new char[length];
-            char* result = strncpy(array, string, length);
-            auto* node = new sead::TListNode<const char*>(result);
+            char* outString = strncpy(array, string, length);
+            auto* node = new sead::TListNode<const char*>(outString);
             mList.insertBefore(&*it, node);
-            return result;
+            return outString;
         }
     }
     s32 length = (s64)((strlen(string) << 32) + 0x100000000LL) >> 32;
     char* array = new char[length];
-    char* result = strncpy(array, string, length);
-    auto* node = new sead::TListNode<const char*>(result);
+    char* outString = strncpy(array, string, length);
+    auto* node = new sead::TListNode<const char*>(outString);
     mList.pushBack(node);
-    return result;
+    return outString;
 }
 
 u32 ByamlWriterStringTable::calcHeaderSize() const {
@@ -82,7 +82,7 @@ u32 ByamlWriterStringTable::calcIndex(const char* string) const {
 void ByamlWriterStringTable::write(sead::WriteStream* stream) const {
     if (isEmpty())
         return;
-    stream->writeU8(0xC2);
+    stream->writeU8((u8)ByamlDataType::StringTable);
     alByamlLocalUtil::writeU24(stream, mList.size());
 
     s32 i = 4 * (mList.size() + 2);

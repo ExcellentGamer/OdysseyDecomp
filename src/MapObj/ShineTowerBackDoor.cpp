@@ -12,7 +12,7 @@
 #include "Library/Nerve/NerveSetupUtil.h"
 #include "Library/Nerve/NerveUtil.h"
 
-#include "Sequence/ChangeStageInfo.h"
+#include "MapObj/ChangeStageInfo.h"
 #include "System/GameDataFunction.h"
 #include "Util/PlayerPuppetFunction.h"
 #include "Util/SensorMsgFunction.h"
@@ -47,10 +47,10 @@ bool ShineTowerBackDoor::receiveMsg(const al::SensorMsg* message, al::HitSensor*
         return true;
 
     if (al::isSensorMapObj(self)) {
-        if (_118)
+        if (_110)
             return false;
 
-        if (al::isMsgPlayerHipDropAll(message)) {
+        if (al::isMsgPlayerObjHipDropAll(message)) {
             mBindTimer = 3;
             return false;
         }
@@ -63,7 +63,7 @@ bool ShineTowerBackDoor::receiveMsg(const al::SensorMsg* message, al::HitSensor*
         if (al::isMsgBindInit(message)) {
             al::invalidateClipping(this);
             mPlayerPuppet = rs::startPuppet(self, other);
-            rs::setPuppetVelocity(mPlayerPuppet, sead::Vector3f::ex * -45.0f);
+            rs::setPuppetVelocity(mPlayerPuppet, sead::Vector3f::ey * -45.0f);
             rs::invalidatePuppetCollider(mPlayerPuppet);
             rs::hidePuppetSilhouette(mPlayerPuppet);
             al::setNerve(this, &NrvShineTowerBackDoor.Enter);
@@ -118,7 +118,7 @@ void ShineTowerBackDoor::exeEnter() {
         al::startHitReaction(this, "入る");
     }
 
-    rs::setPuppetVelocity(mPlayerPuppet, sead::Vector3f::ex * -45.0f);
+    rs::setPuppetVelocity(mPlayerPuppet, sead::Vector3f::ey * -45.0f);
     sead::Vector3f puppetTrans = rs::getPuppetTrans(mPlayerPuppet);
     sead::Vector3f trans = al::getTrans(this);
     trans.y = puppetTrans.y;

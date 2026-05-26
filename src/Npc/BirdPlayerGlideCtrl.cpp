@@ -10,7 +10,7 @@
 #include "Library/Matrix/MatrixUtil.h"
 #include "Library/Nerve/NerveSetupUtil.h"
 #include "Library/Nerve/NerveUtil.h"
-#include "Library/Resource/ResourceHolder.h"
+#include "Library/Resource/ResourceFunction.h"
 #include "Library/Scene/SceneObjUtil.h"
 #include "Library/Yaml/ByamlUtil.h"
 
@@ -273,27 +273,27 @@ void BirdPlayerGlideCtrl::exeWaitFlyAway() {
 namespace rs {
 
 void validateGlideBirdOnPlayerNose(const al::LiveActor* player) {
-    if (al::isExistSceneObj(player, BirdPlayerGlideCtrl::sSceneObjId))
+    if (al::isExistSceneObj<BirdPlayerGlideCtrl>(player))
         al::getSceneObj<BirdPlayerGlideCtrl>(player)->validateGlideOnNose();
 }
 
 void invalidateGlideBirdOnPlayerNose(const al::LiveActor* player) {
-    if (al::isExistSceneObj(player, BirdPlayerGlideCtrl::sSceneObjId))
+    if (al::isExistSceneObj<BirdPlayerGlideCtrl>(player))
         al::getSceneObj<BirdPlayerGlideCtrl>(player)->invalidateGlideOnNose();
 }
 
 void validateGlideBirdOnSitDownPlayerHead(const al::LiveActor* player) {
-    if (al::isExistSceneObj(player, BirdPlayerGlideCtrl::sSceneObjId))
+    if (al::isExistSceneObj<BirdPlayerGlideCtrl>(player))
         al::getSceneObj<BirdPlayerGlideCtrl>(player)->validateGlideOnSitDownHead();
 }
 
 void invalidateGlideBirdOnSitDownPlayerHead(const al::LiveActor* player) {
-    if (al::isExistSceneObj(player, BirdPlayerGlideCtrl::sSceneObjId))
+    if (al::isExistSceneObj<BirdPlayerGlideCtrl>(player))
         al::getSceneObj<BirdPlayerGlideCtrl>(player)->invalidateGlideOnSitDownHead();
 }
 
 bool isPlayerSitDownChair(const Bird* bird) {
-    return al::isExistSceneObj(bird, BirdPlayerGlideCtrl::sSceneObjId) &&
+    return al::isExistSceneObj<BirdPlayerGlideCtrl>(bird) &&
            al::getSceneObj<BirdPlayerGlideCtrl>(bird)->isValidOnSitDownHead();
 }
 

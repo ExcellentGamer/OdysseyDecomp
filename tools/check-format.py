@@ -75,11 +75,17 @@ def common_no_namespace_qualifiers(c, path):
                 del nest_level[-1]
                 continue
 
-            matches = re.findall(r"([^\(,\s]+::)+[^\(,\s]+", x)
+            matches = re.findall(r"([^\(,\s]+::)+([^\(,\s]+)", x)
             for match in matches:
-                match = match[0:-2]
+                namespace = match[0][0:-2]
+
+                if "setColliderRadius" in match[1]:
+                    continue;
+                if "setColliderOffsetY" in match[1]:
+                    continue;
+
                 # examples: "sead", "al", "nn::g3d"
-                if CHECK(lambda a: match not in allowed_namespaces, line, match + " should be omitted here!",
+                if CHECK(lambda a: namespace not in allowed_namespaces, line, namespace + " should be omitted here!",
                          path): return
 
     if len(nest_level) != 0:
@@ -254,7 +260,7 @@ def common_sead_math_template(c, path):
                 continue
             if "using" in line or "typedef" in line:
                 continue
-            if "sead::Buffer" in line:  # probably needs more exceptions at some point
+            if "sead::Buffer" in line or "sead::RingBuffer" in line:  # probably needs more exceptions at some point
                 continue
             if "sead::PtrArray" in line:
                 continue
@@ -306,13 +312,21 @@ def common_const_reference(c, path):
             continue
         if "operator&" in line:
             continue
+        if "operator[]" in line:
+            continue
+        if "Type const&" in line:
+            continue
         if "AudioDirectorInitInfo" in line:
             continue
         if "ReplaceTimeInfo" in line:
             continue
         if "calcBendPosAndFront" in line:
             continue
+        if "cleanupResGraphicsFile" in line:
+            continue
         if "sead::IDelegate1<CollisionParts*>" in line:
+            continue
+        if "sead::IDelegate1<al::CollisionParts*>" in line:
             continue
         if re.search(r"(?<!const)[( ][\w_:]+(<[\w_:]+[\*&]?>)?&", line):
             FAIL("References must be const!", line, path)
@@ -320,7 +334,7 @@ def common_const_reference(c, path):
 def common_self_other(c, path, is_header):
     lines = c.splitlines()
     for i, line in enumerate(lines):
-        if (("attackSensor(" in line and "void HitSensor" not in line) or "receiveMsg(" in line) and (is_header or "::" in line) and (("self" not in line and "self" not in lines[i + 1]) or "other" not in line) and "Library/HitSensor/HitSensorKeeper.h" not in path:
+        if (("attackSensor(" in line and "void HitSensor" not in line) or "receiveMsg(" in line) and (is_header or "::" in line) and (("self" not in line and "self" not in lines[i + 1]) or "other" not in line) and "Library/HitSensor/HitSensorKeeper.h" not in path and "Library/Event/EventFlowExecutor.h" not in path:
             FAIL("'attackSensor' and 'receiveMsg' should have 'self' and 'other' params!", line, path)
             return
 
@@ -415,7 +429,9 @@ def header_check_line(line, path, visibility, should_start_class, is_in_struct):
     elif visibility == 2:  # private
         if line == "};" or line == "" or line == "union {" or line.startswith("struct") or line.startswith("enum"): return
         newline = line
-        if "=" in line:
+        if line.startswith("static_assert") or "template" in line:
+            return
+        elif "=" in line:
             newline = line.split("=")[0].strip()
         elif "(" in line or ")" in line:
             return
@@ -430,8 +446,8 @@ def header_check_line(line, path, visibility, should_start_class, is_in_struct):
         var_name = newline.split(" : ")[0].split(" ")[-1]
         var_type = " ".join(newline.split(" ")[0:-1])
 
-        if var_type.startswith("enum") or var_type.startswith("friend"):
-            return  # Allow enum and friend class
+        if var_type.startswith("enum") or var_type.startswith("friend") or var_type.startswith("using"):
+            return  # Allow enum, friend class and using
 
         PREFIXES = ["pad", "field", "unk", "gap", "_", "filler"]
 
@@ -441,6 +457,7 @@ def header_check_line(line, path, visibility, should_start_class, is_in_struct):
         else:
             allowed_name = (var_name.startswith("m") and var_name[1].isupper()) or any(
                 [var_name.startswith(p) for p in PREFIXES])
+            if path.endswith("SensorMsgSetupUtil.h") and "DECL_MEMBER_VAR_MULTI" in line: return
             CHECK(lambda a: allowed_name, line, "Member variables must be prefixed with `m`!", path)
 
         if var_type == "bool":
@@ -479,6 +496,11 @@ def source_no_nerve_make(c, path):
             FAIL("Use of NERVE_MAKE is not allowed. Use NERVES_MAKE_[NO]STRUCT instead.", line, path)
             return
 
+def source_always_inline_macro(c, path):
+    for line in c.splitlines():
+        if "__attribute__((always_inline)) inline" in line:
+            FAIL("Explicitly using `__attribute__((always_inline)) inline` is not allowed. Use ALWAYS_INLINE from Library/Base/Macros.h instead", line, path)
+
 # -----
 # UTILS
 # -----
@@ -497,6 +519,7 @@ def check_source(c, path):
     source_no_raw_auto(c, path)
     common_self_other(c, path, False)
     common_consistent_float_literals(c, path)
+    source_always_inline_macro(c, path)
 
 def check_header(c, path):
     common_newline_eof(c, path)

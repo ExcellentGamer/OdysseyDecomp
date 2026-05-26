@@ -9,10 +9,13 @@ struct ActorInitInfo;
 class HitSensor;
 class SensorMsg;
 }  // namespace al
+class CapTargetInfo;
+class ItemGenerator;
+class SaveObjInfo;
 
 class CapHanger : public al::LiveActor {
 public:
-    CapHanger(const char*, bool);
+    CapHanger(const char*, bool = false);
     void init(const al::ActorInitInfo& info) override;
     void initItem(s32, s32, const al::ActorInitInfo&);
     void switchOn();
@@ -21,8 +24,9 @@ public:
     void initAfterPlacement() override;
     void kill() override;
     void control() override;
-    void attackSensor(al::HitSensor* other, al::HitSensor* self) override;
-    bool receiveMsg(const al::SensorMsg* msg, al::HitSensor* other, al::HitSensor* self) override;
+    void attackSensor(al::HitSensor* self, al::HitSensor* other) override;
+    bool receiveMsg(const al::SensorMsg* message, al::HitSensor* other,
+                    al::HitSensor* self) override;
     void exeWait();
     void exeKeep();
     void exeRelease();
@@ -30,15 +34,15 @@ public:
     void setPeachCastleCap(const sead::Vector3f&);
 
 private:
-    void* _108;
+    CapTargetInfo* mCapTargetInfo;
     void* _110;
     s32 _118;
-    s32 _11c;
+    s32 mAppearItemNum;
     s32 _120;
-    void* _128;
-    bool _130;
+    ItemGenerator* mItemGenerator;
+    bool mIsEmitEffect;
     void* _138;
-    void* _140;
+    SaveObjInfo* _140;
     sead::Matrix34f _148;
     sead::Matrix34f _178;
     bool _1a8;

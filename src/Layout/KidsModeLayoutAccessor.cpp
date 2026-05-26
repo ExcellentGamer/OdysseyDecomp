@@ -4,7 +4,7 @@
 
 #include "System/GameDataUtil.h"
 
-KidsModeLayoutAccessor::KidsModeLayoutAccessor() {}
+KidsModeLayoutAccessor::KidsModeLayoutAccessor() = default;
 
 namespace rs {
 void setKidsModeLayoutDisable(const al::IUseSceneObjHolder* user) {
@@ -16,7 +16,7 @@ void setKidsModeLayoutEnable(const al::IUseSceneObjHolder* user) {
 }
 
 bool isKidsModeLayoutDisable(const al::IUseSceneObjHolder* user) {
-    return !rs::isKidsMode(user) ||
+    return !isKidsMode(user) ||
            al::getSceneObj<KidsModeLayoutAccessor>(user)->isKidsModeLayoutDisable();
 }
 

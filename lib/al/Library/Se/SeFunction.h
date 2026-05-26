@@ -63,4 +63,7 @@ void setSeOutputTvDrcRemoteAll(SePlayParamList*);
 
 namespace alSeFunction {
 void stopAllSe(const al::AudioDirector*, u32);
-}
+void startListenerPoser(const al::IUseAudioKeeper*, const char*, s32);
+void endListenerPoser(const al::IUseAudioKeeper*, const char*, s32);
+void startSeFromUpperLayerSeKeeper(const al::IUseAudioKeeper* user, const char* soundEffect);
+}  // namespace alSeFunction

@@ -3,16 +3,16 @@
 #include "Library/LiveActor/ActorInitUtil.h"
 #include "Library/Player/PlayerUtil.h"
 #include "Library/Scene/IUseSceneObjHolder.h"
+#include "Library/Scene/SceneObjUtil.h"
 #include "Library/Se/SeFunction.h"
 
 #include "Layout/CoinCollectLayout.h"
-#include "Scene/SceneObjFactory.h"
 #include "System/GameDataFunction.h"
 
 CoinCollectWatcher::CoinCollectWatcher() : al::ISceneObj() {}
 
-void CoinCollectWatcher::initAfterPlacementSceneObj(const al::ActorInitInfo& initInfo) {
-    mCoinCollectLayout = new CoinCollectLayout(al::getLayoutInitInfo(initInfo));
+void CoinCollectWatcher::initAfterPlacementSceneObj(const al::ActorInitInfo& info) {
+    mCoinCollectLayout = new CoinCollectLayout(al::getLayoutInitInfo(info));
 }
 
 void CoinCollectWatcher::registerCoin(bool isCountUpCoin) {
@@ -36,6 +36,6 @@ void CoinCollectWatcher::countup(const al::LiveActor* actor) {
 
 namespace rs {
 CoinCollectWatcher* createCoinCollectWatcher(const al::IUseSceneObjHolder* objHolder) {
-    return (CoinCollectWatcher*)al::createSceneObj(objHolder, SceneObjID_CoinCollectWatcher);
+    return al::createSceneObj<CoinCollectWatcher>(objHolder);
 }
 }  // namespace rs

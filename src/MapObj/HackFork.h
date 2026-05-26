@@ -27,7 +27,7 @@ class PlayerHackStartShaderCtrl;
 class HackFork : public al::LiveActor {
 public:
     HackFork(const char* name);
-    void init(const al::ActorInitInfo& initInfo) override;
+    void init(const al::ActorInitInfo& info) override;
     void attackSensor(al::HitSensor* self, al::HitSensor* other) override;
     bool receiveMsg(const al::SensorMsg* message, al::HitSensor* other,
                     al::HitSensor* self) override;
@@ -92,7 +92,7 @@ private:
     bool mIsPullDown = false;
     bool mIsLimitterFree = false;
     s32 mTouchDelay = 0;
-    s32 mAirVel = 0;
+    s32 mEndHackDelay = 0;
     al::MtxConnector* mMtxConnector = nullptr;
     al::EventFlowExecutor* mEventFlowExecutor = nullptr;
     PlayerHackStartShaderCtrl* mHackStartShaderCtrl = nullptr;

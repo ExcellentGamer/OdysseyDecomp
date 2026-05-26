@@ -14,14 +14,16 @@ public:
 
     bool isConnecting() const override;
     void clear() override;
+    virtual bool isMoved() const;
 
-    void init(const sead::Matrix34f*, const sead::Matrix34f&, const CollisionParts*);
-    HitSensor* getConnectingSensor() const;
-    bool isMoved() const;
+    // TODO: Rename parameters
+    void init(const sead::Matrix34f* mtxA, const sead::Matrix34f& mtxB,
+              const CollisionParts* collisionParts);
+    const HitSensor* getConnectingSensor() const;
     bool isConnectInvalidCollision() const;
 
 private:
-    void* _0[1];
+    const CollisionParts* mCollisionParts = nullptr;
 };
 
 static_assert(sizeof(CollisionPartsConnector) == 0x68);

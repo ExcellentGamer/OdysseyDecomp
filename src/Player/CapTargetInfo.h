@@ -5,8 +5,10 @@
 
 namespace al {
 class LiveActor;
-class IUsePlayerCollision;
 }  // namespace al
+
+class IUsePlayerCollision;
+class CapTargetInfoFunction;
 
 class CapTargetInfo {
 public:
@@ -21,19 +23,24 @@ public:
     void makeLockOnMtx(sead::Matrix34f* outMtx) const;
     void calcLockOnFollowTargetScale(sead::Vector3f* targetScale) const;
 
-    void setPoseMatrix(sead::Matrix34f* mtx) { mPoseMatrix = mtx; }
+    void setPoseMatrix(const sead::Matrix34f* mtx) { mPoseMatrix = mtx; }
+
+    const char* getHackName() const { return mHackName; }
+
+    void setIsLockOnOnly() { mIsLockOnOnly = true; }
 
 private:
+    friend CapTargetInfoFunction;
     const al::LiveActor* mActor = nullptr;
     const char* mHackName = nullptr;
-    al::IUsePlayerCollision* mPlayerCollision = nullptr;
-    sead::Matrix34f* mPoseMatrix = nullptr;
+    IUsePlayerCollision* mPlayerCollision = nullptr;
+    const sead::Matrix34f* mPoseMatrix = nullptr;
     const sead::Matrix34f* mJointMtx = nullptr;
     sead::Vector3f mLocalTrans = sead::Vector3f::zero;
     sead::Vector3f mLocalRotate = sead::Vector3f::zero;
     f32 mLockOnScale = 1.0f;
     bool mIsUseLockOnFollowMtxScale = false;
-    bool mIsUseFollowScaleLocalOffset = false;
+    bool mIsUseFollowMtxScaleLocalOffset = false;
     const char* mLockOnStartAnimName = "Capture";
     const char* mLockOnAnimName = "Capture";
     bool mIsEscapeLocalOffset = false;
@@ -55,4 +62,10 @@ private:
     bool _7d = false;
     bool _7e = false;
     bool _7f = false;
+};
+
+class CapTargetInfoFunction {
+public:
+    static void initIterCapTargetInfo(CapTargetInfo* capTargetInfo, IUsePlayerCollision*,
+                                      const al::LiveActor* actor, const char* name);
 };

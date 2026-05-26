@@ -129,7 +129,7 @@ bool EnemyStateSwoon::tryReceiveMsgTrampleReflect(const al::SensorMsg* message) 
 bool EnemyStateSwoon::tryReceiveMsgTrampleReflect(const al::SensorMsg* message,
                                                   const al::HitSensor* other,
                                                   const al::HitSensor* self) {
-    if (al::isMsgPlayerTrampleForCrossoverSensor(message, other, self))
+    if (al::isMsgPlayerTrampleReflectForCrossoverSensor(message, other, self))
         return tryReceiveMsgTrampleReflect(message);
     return false;
 }
@@ -178,7 +178,7 @@ bool EnemyStateSwoon::requestTrampled() {
 
 void EnemyStateSwoon::initParams(s32 swoonDuration, const char* trampledAnimName) {
     mSwoonDuration = swoonDuration;
-    if (trampledAnimName != nullptr)
+    if (trampledAnimName)
         mTrampledAnimName = trampledAnimName;
 }
 

@@ -13,6 +13,7 @@
 #include "Player/PlayerInput.h"
 #include "Player/PlayerStateWait.h"
 #include "Util/PlayerCollisionUtil.h"
+#include "Util/PlayerUtil.h"
 
 PlayerJudgeTalkGround::PlayerJudgeTalkGround(
     const al::LiveActor* playerActor, const IPlayerModelChanger* playerModelChanger,
@@ -25,8 +26,8 @@ PlayerJudgeTalkGround::PlayerJudgeTalkGround(
       mPlayerStateWait(playerStateWait) {}
 
 bool PlayerJudgeTalkGround::judge() const {
-    auto* currentHackActor = mPlayerHackKeeper->getCurrentHackActor();
-    if (mPlayerHackKeeper->getUnkHitSensor()) {
+    auto* currentHackActor = mPlayerHackKeeper->getHack();
+    if (mPlayerHackKeeper->getHackSensor()) {
         if (!rs::isPlayerOnGround(currentHackActor) || mPlayerInput->isMove())
             return false;
 

@@ -3,6 +3,7 @@
 #include <container/seadOffsetList.h>
 #include <container/seadPtrArray.h>
 #include <container/seadStrTreeMap.h>
+#include <container/seadTList.h>
 #include <gfx/seadCamera.h>
 #include <gfx/seadFrameBuffer.h>
 #include <nn/g3d/ViewVolume.h>
@@ -146,7 +147,7 @@ public:
     void cancelLerp();
     void updateGraphics();
     void updatePartsGraphics(const GraphicsUpdateInfo&);
-    void preDrawGraphics(SceneCameraInfo*);
+    void preDrawGraphics(const SceneCameraInfo*);
     void calcGpuPartsGraphics(const GraphicsCalcGpuInfo&);
     void updateViewGpu(s32, const sead::Camera*, const Projection*);
     void updateViewVolume(const sead::Matrix34f&, const sead::Matrix44f&);
@@ -191,6 +192,22 @@ public:
     OcclusionCullingJudge* getOcclusionCullingJudge() const { return mOcclusionCullingJudge; }
 
     PostProcessingFilter* getPostProcessingFilter() const { return mPostProcessingFilter; }
+
+    GpuMemAllocator* getGpuMemAllocator() const { return mGpuMemAllocator; }
+
+    ModelShaderHolder* getModelShaderHolder() const { return mModelShaderHolder; }
+
+    ModelOcclusionCullingDirector* getModelOcclusionCullingDirector() const {
+        return mModelOcclusionCullingDirector;
+    }
+
+    ShadowDirector* getShadowDirector() const { return mShadowDirector; }
+
+    PrepassTriangleCulling* getPrepassTriangleCulling() const { return mPrepassTriangleCulling; }
+
+    RadialBlurDirector* getRadialBlurDirector() const { return mRadialBlurDirector; }
+
+    SubCameraRenderer* getSubCameraRenderer() const { return mSubCameraRenderer; }
 
 private:
     sead::StrTreeMap<128, const sead::PtrArray<UniformBlock>*> mViewIndexedUboArrayTree;
@@ -283,7 +300,7 @@ private:
     EffectSystem* mEffectSystem;
     SceneCameraInfo* mSceneCameraInfo;
     const char* _948;
-    void* _950[3];  // sead::OffsetList
+    sead::TList<PartsGraphics*> mPartsGraphics;
     VastGridMeshDirector* mVastGridMeshDirector;
     FullScreenTriangle* mFullScreenTriangle;
     s32 _978;

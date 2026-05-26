@@ -16,7 +16,7 @@ class AudioMic;
 class SeKeeper;
 class BgmKeeper;
 
-class AudioKeeper : public IUseHioNode {
+class AudioKeeper : public HioNode {
 public:
     AudioKeeper(const AudioDirector*);
     virtual ~AudioKeeper();
@@ -59,5 +59,6 @@ static_assert(sizeof(AudioKeeper) == 0x38);
 }  // namespace al
 
 namespace alAudioKeeperFunction {
+al::AudioKeeper* createAudioKeeper(const al::AudioDirector*);
 al::AudioKeeper* createAudioKeeper(const al::AudioDirector*, const char*, const char*);
-}
+}  // namespace alAudioKeeperFunction
